@@ -1,4 +1,5 @@
 import datetime
+import math
 import time
 import os
 import soundfile
@@ -16,11 +17,12 @@ class piClock:
         for i in range(channel_num):
             kit.servo[i].set_pulse_width_range(750, 2650)
             kit.servo[i].actuation_range = 180
-            kit.servo[i].angle = 0
+            self.set_angle(kit.servo[i], 0)
 
             # Only 6 servos will ever be needed
-            if channel_num == 5:
+            if i == 5:
                 break
+            # Too much power draw if all servos are moving at once
             time.sleep(1)
 
         # Hours
@@ -35,8 +37,8 @@ class piClock:
         # self.seconds_tens = kit.servo[4]
         # self.seconds_ones = kit.servo[5]
 
-        self.stored_hour = 0
-        self.stored_minute = 0
+        self.stored_hour = 00
+        self.stored_minute = 00
 
     def set_angle(self, servo: ServoKit, number: int) -> None:
         """ 
@@ -45,8 +47,20 @@ class piClock:
         @param servo: The specific servo to adjust the current signal on
         @param number: The number, 0-9, to display in a specific servo
         """
-        servo.angle = int(number) * 20
-        time.sleep(1)  # Too much power draw if all 4 are moving at once
+
+        if not servo.angle:
+            servo.angle = 0
+        current_number = math.ceil(servo.angle)
+
+        # Increment the servo angle over time
+        if current_number < number*20:
+            iteratator = 1
+        else:
+            iteratator = -1
+        
+        for i in range(current_number, (number*20)+iteratator, iteratator):
+            servo.angle = i
+            time.sleep(.1)
 
     def set_servos(self, hour: int, minute: int) -> None:
         """ Parse the hours and minutes to send as servo angles 
