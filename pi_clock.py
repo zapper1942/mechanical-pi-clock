@@ -1,3 +1,4 @@
+import argparse
 import datetime
 import math
 import time
@@ -60,7 +61,7 @@ class piClock:
         
         for i in range(current_number, (number*20)+iteratator, iteratator):
             servo.angle = i
-            time.sleep(.1)
+            time.sleep(.05)
 
     def set_servos(self, hour: int, minute: int) -> None:
         """ Parse the hours and minutes to send as servo angles 
@@ -109,17 +110,28 @@ def announce_time(curent_time: datetime) -> None:
 
 
 if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser(description='Pi Servo Mechanical Clock')
+
+    parser.add_argument('-l', "--limit-changes", action="store_true", help='Limit the amount of time changes outside of waking hours')
+    args = parser.parse_args()
+
     pi_clock_obj = piClock()
     # Wait for the top of the second to start keeping time
     sleep_time = dynamic_sleep()
     print(f"Waiting till the top of the second. Sleeping for {sleep_time} seconds")
     time.sleep(sleep_time)
-    recorded_hour = 0
+    recorded_hour = 00
     while True:
         now = datetime.datetime.now()
         print(now)
-        # Send the current hour and minute with leading zeros
-        pi_clock_obj.set_servos(now.hour, now.minute)
+        # Only change the hour servos when sleeping
+        if args.limit_changes and (2 <= now.hour <= 8):
+            pi_clock_obj.set_servos(now.hour, 00)
+        else:
+            # Send the current hour and minute with leading zeros
+            pi_clock_obj.set_servos(now.hour, now.minute)
+
         # Vocalize the current hour if the hour has changed
         if now.hour != recorded_hour:
             announce_time(now)
