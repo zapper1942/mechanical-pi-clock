@@ -3,8 +3,9 @@ import datetime
 import math
 import time
 import os
-import soundfile
-import sounddevice
+import pathlib
+
+from playsound import playsound
 from adafruit_servokit import ServoKit
 
 
@@ -101,12 +102,10 @@ def announce_time(curent_time: datetime) -> None:
     @param current_time: datetime now
     """
 
-    sound_file = os.path.join(os.path.expanduser("~"), "clock_code", f"{str(curent_time.hour)}.aiff")
+    sound_file = os.path.join(pathlib.Path(__file__).parent.resolve(), "sound_files", f"{str(curent_time.hour)}.aiff")
 
     if os.path.isfile(sound_file):
-        data, samplerate = soundfile.read(sound_file)
-        sounddevice.play(data, samplerate)
-        sounddevice.wait()
+        playsound(sound_file)
 
 
 if __name__ == '__main__':
