@@ -1,5 +1,5 @@
 # mechanical-pi-clock
-![alt text](hhttps://engineezy.com/cdn/shop/files/IMG_5888_1296x.jpg?raw=true)
+![alt text](https://engineezy.com/cdn/shop/files/IMG_5888_1296x.jpg?raw=true)
 (Image Credit Engineezy)
 
 Source project file can be found here
