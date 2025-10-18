@@ -102,7 +102,7 @@ def announce_time(curent_time: datetime) -> None:
     @param current_time: datetime now
     """
 
-    sound_file = os.path.join(pathlib.Path(__file__).parent.resolve(), "sound_files", f"{str(curent_time.hour)}.aiff")
+    sound_file = os.path.join(pathlib.Path(__file__).parent.resolve(), "sound_files", f"{str(curent_time.hour)}.wav")
 
     if os.path.isfile(sound_file):
         playsound(sound_file)
