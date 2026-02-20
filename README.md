@@ -1,5 +1,5 @@
 # mechanical-pi-clock
-![alt text](https://engineezy.com/cdn/shop/files/IMG_5888_1296x.jpg?raw=true)
+![alt text](./IMG_5888_1296x.jpg)
 (Image Credit Engineezy)
 
 Source project file can be found here<br>
@@ -14,6 +14,7 @@ Required Python Packages for sound (Optional):<br>
 playsound
 
 Auto start steps:<br>
-Add the following line to the end of your .bashrc file. There are more elegant ways to start a python script on boot but I've found only this .bashrc method works the the sound. Feel free to use another method if not using sound.<br>
+Add the following line to the end of your .bashrc file. There are more elegant ways to start a python script on boot but I've found only this .bashrc method works with the sound. Feel free to use another method if you're not using sound.<br>
 bash ~/clock_code/autolauncher.sh &<br>
-This will autostart the python script in the background however you setup the autolauncher script
+This will autostart the python script in the background.<br>
+You can change the autolauncher script paramaters as desired.
