@@ -16,5 +16,5 @@ playsound
 Auto start steps:<br>
 Add the following line to the end of your .bashrc file. There are more elegant ways to start a python script on boot but I've found only this .bashrc method works with the sound. Feel free to use another method if you're not using sound.<br>
 bash ~/clock_code/autolauncher.sh &<br>
-This will autostart the python script in the background.<br>
+This will set the volume level and autostart the python script in the background.<br>
 You can change the autolauncher script paramaters as desired.

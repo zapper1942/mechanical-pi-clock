@@ -110,9 +110,10 @@ def announce_time(current_time: datetime, chime_type: str) -> None:
         sound_files.append(os.path.join(pathlib.Path(__file__).parent.resolve(), "sound_files", f"{current_time.strftime('%H')}.wav"))
     elif chime_type.lower() == "classical":
         sound_files.append(os.path.join(pathlib.Path(__file__).parent.resolve(), "sound_files", "grandfather_alert.wav"))
-        # Only chime up to 12 times
-        for _ in range(0, int(current_time.strftime("%I"))):
+        # Only chime up to 12 times with the last one being allowed to trail off
+        for _ in range(0, int(current_time.strftime("%I"))-1):
             sound_files.append(os.path.join(pathlib.Path(__file__).parent.resolve(), "sound_files", "grandfather_chime.wav"))
+        sound_files.append(os.path.join(pathlib.Path(__file__).parent.resolve(), "sound_files", "grandfather_chime_trail.wav"))
 
     for sound_file in sound_files:
         if os.path.isfile(sound_file):
@@ -133,7 +134,7 @@ if __name__ == '__main__':
     sleep_time = dynamic_sleep()
     print(f"Waiting till the top of the second. Sleeping for {sleep_time} seconds")
     time.sleep(sleep_time)
-    recorded_hour = 00
+    recorded_hour = None
     while True:
         now = datetime.datetime.now()
         print(now)
