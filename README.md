@@ -10,5 +10,10 @@ Raspberry Pi<br>
 Adafruit servo hat<br>
 https://www.adafruit.com/product/3416?srsltid=AfmBOork7eebJPQc8EZTlTusntxE3_w2fnc24dvU2uT_JZLvEPRV1yyn
 
-Required Python Packages:<br>
+Required Python Packages for sound (Optional):<br>
 playsound
+
+Auto start steps:<br>
+Add the following line to the end of your .bashrc file. There are more elegant ways to start a python script on boot but I've found only this .bashrc method works the the sound. Feel free to use another method if not using sound.<br>
+bash ~/clock_code/autolauncher.sh &<br>
+This will autostart the python script in the background however you setup the autolauncher script

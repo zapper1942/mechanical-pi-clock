@@ -96,15 +96,23 @@ def dynamic_sleep() -> int:
     sleep_time = 60 - datetime.datetime.now().second
     return sleep_time
 
-def announce_time(curent_time: datetime) -> None:
+def announce_time(current_time: datetime, chime_type: str) -> None:
     """ 
     Read out the time to the speaker 
     @param current_time: datetime now
+    @param chime_type: Either the Classical or Modern Chime
     """
 
+
     sound_files = []
-    sound_files.append(os.path.join(pathlib.Path(__file__).parent.resolve(), "sound_files", "electronic_chime.wav"))
-    sound_files.append(os.path.join(pathlib.Path(__file__).parent.resolve(), "sound_files", f"{curent_time.strftime('%H')}.wav"))
+    if chime_type.lower() == "modern":
+        sound_files.append(os.path.join(pathlib.Path(__file__).parent.resolve(), "sound_files", "electronic_alert_chime.wav"))
+        sound_files.append(os.path.join(pathlib.Path(__file__).parent.resolve(), "sound_files", f"{current_time.strftime('%H')}.wav"))
+    elif chime_type.lower() == "classical":
+        sound_files.append(os.path.join(pathlib.Path(__file__).parent.resolve(), "sound_files", "grandfather_alert.wav"))
+        # Only chime up to 12 times
+        for _ in range(0, int(current_time.strftime("%I"))):
+            sound_files.append(os.path.join(pathlib.Path(__file__).parent.resolve(), "sound_files", "grandfather_chime.wav"))
 
     for sound_file in sound_files:
         if os.path.isfile(sound_file):
@@ -116,6 +124,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Pi Servo Mechanical Clock')
 
     parser.add_argument('-l', "--limit-changes", action="store_true", help='Limit the amount of time changes outside of waking hours')
+    parser.add_argument('-c', "--chime-type", choices=["modern", "classical"], type=str.lower, help='Optionally announce the time with a speaker. ' \
+        'Either with a Modern verbalizing of the time or with a Classical Grandfather clock style chimes')
     args = parser.parse_args()
 
     pi_clock_obj = piClock()
@@ -136,6 +146,7 @@ if __name__ == '__main__':
 
         # Vocalize the current hour if the hour has changed
         if now.hour != recorded_hour:
-            announce_time(now)
+            if args.chime_type:
+                announce_time(now, args.chime_type)
             recorded_hour = now.hour
         time.sleep(dynamic_sleep())
