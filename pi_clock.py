@@ -54,15 +54,16 @@ class piClock:
             servo.angle = 0
         current_number = math.ceil(servo.angle)
 
-        # Increment the servo angle over time
+        # Either increment or decrement the servo angle
         if current_number < number*20:
             iteratator = 1
         else:
             iteratator = -1
         
+        # Increment the servo angle over time for power draw reasons
         for i in range(current_number, (number*20)+iteratator, iteratator):
             servo.angle = i
-            time.sleep(.05)
+            time.sleep(.06)
 
     def set_servos(self, hour: int, minute: int) -> None:
         """ Parse the hours and minutes to send as servo angles 
@@ -134,10 +135,17 @@ if __name__ == '__main__':
     sleep_time = dynamic_sleep()
     print(f"Waiting till the top of the second. Sleeping for {sleep_time} seconds")
     time.sleep(sleep_time)
-    recorded_hour = None
+    recorded_hour = datetime.datetime.now().hour
     while True:
         now = datetime.datetime.now()
-        print(now)
+        print(now)        
+        
+        # Vocalize the current hour if the hour has changed
+        if now.hour != recorded_hour:
+            if args.chime_type:
+                announce_time(now, args.chime_type)
+            recorded_hour = now.hour
+
         # Only change the hour servos when sleeping
         if args.limit_changes and (2 <= now.hour <= 8):
             pi_clock_obj.set_servos(now.hour, 00)
@@ -145,9 +153,5 @@ if __name__ == '__main__':
             # Send the current hour and minute with leading zeros
             pi_clock_obj.set_servos(now.hour, now.minute)
 
-        # Vocalize the current hour if the hour has changed
-        if now.hour != recorded_hour:
-            if args.chime_type:
-                announce_time(now, args.chime_type)
-            recorded_hour = now.hour
+
         time.sleep(dynamic_sleep())
